@@ -2,18 +2,20 @@ let worker: Worker | null = null;
 
 export const initWhisperWorker = () => {
   if (!worker) {
-    worker = new Worker(new URL('./whisper.worker.ts', import.meta.url));
+    // NOTE: Load the .js version not .ts
+    worker = new Worker('/workers/whisper.worker.js');
   }
 };
 
 export const runWhisper = (audioBuffer: Float32Array): Promise<string> => {
   return new Promise((resolve) => {
-    if (!worker) throw new Error("Whisper worker not initialized");
+    if (!worker) throw new Error('Whisper worker not initialized');
 
     worker.onmessage = (e) => {
-      resolve(e.data.text); // expects { text: "..." } from worker
+      resolve(e.data.text);
     };
 
     worker.postMessage({ audioBuffer });
   });
 };
+

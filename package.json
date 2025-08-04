@@ -16,7 +16,8 @@
     "openai": "^5.11.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "workbox-webpack-plugin": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,14 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { initWhisperWorker, runWhisper } from '@/workers/whisperWorker';
+import { initWhisperWorker, runWhisper } from '../../public/workers/whisperWorker';
 
 export default function HomePage() {
   const [transcript, setTranscript] = useState('');
   const [recording, setRecording] = useState(false);
   const [audioBuffer, setAudioBuffer] = useState<Float32Array | null>(null);
 
+  // ✅ Register the Service Worker here
   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((reg) => {
+          console.log('SW registered: ', reg);
+        })
+        .catch((err) => {
+          console.error('SW registration failed: ', err);
+        });
+    }
+
     initWhisperWorker();
   }, []);
 

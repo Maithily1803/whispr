@@ -1,0 +1,6 @@
+# .eslintignore
+
+whisper.cpp/build/
+whisper.cpp/tests/
+whisper.cpp/**/*.js
+whisper.cpp/**/*.ts
