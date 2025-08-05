@@ -11,25 +11,27 @@
   "dependencies": {
     "@tensorflow/tfjs": "^4.22.0",
     "@tensorflow/tfjs-backend-webgl": "^4.22.0",
-    "next": "15.4.5",
+    "next": "^15.4.5",
     "next-pwa": "^5.6.0",
+    "onnxruntime-web": "^1.22.0",
     "openai": "^5.11.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-use": "^17.6.0",
     "workbox-webpack-plugin": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
+    "@types/node": "^20.19.9",
+    "@types/react": "^19.1.9",
     "@types/react-dom": "^19",
+    "@types/webassembly-js-api": "^0.0.3",
     "@types/webpack": "^5.28.5",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^5.8.3",
     "webpack": "^5.101.0",
     "worker-loader": "^3.0.8"
   }

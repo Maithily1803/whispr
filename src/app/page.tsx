@@ -1,77 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { initWhisperWorker, runWhisper } from '../../public/workers/whisperWorker';
+import { useEffect, useRef } from 'react';
 
 export default function HomePage() {
-  const [transcript, setTranscript] = useState('');
-  const [recording, setRecording] = useState(false);
-  const [audioBuffer, setAudioBuffer] = useState<Float32Array | null>(null);
+  const workerRef = useRef<Worker | null>(null);
 
-  // ✅ Register the Service Worker here
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then((reg) => {
-          console.log('SW registered: ', reg);
-        })
-        .catch((err) => {
-          console.error('SW registration failed: ', err);
-        });
-    }
+    const worker = new Worker('/workers/ttsWorker.js');
+    workerRef.current = worker;
 
-    initWhisperWorker();
-  }, []);
-
-  const handleRecord = async () => {
-    setRecording(true);
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(stream);
-    const processor = audioContext.createScriptProcessor(4096, 1, 1);
-
-    const chunks: Float32Array[] = [];
-
-    processor.onaudioprocess = (e) => {
-      const input = e.inputBuffer.getChannelData(0);
-      chunks.push(new Float32Array(input));
+    worker.onmessage = (event) => {
+      const audioBlob = event.data;
+      if (audioBlob) {
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+      } else {
+        console.error("TTS failed or returned no audio.");
+      }
     };
 
-    source.connect(processor);
-    processor.connect(audioContext.destination);
+    return () => {
+      worker.terminate();
+    };
+  }, []);
 
-    setTimeout(async () => {
-      processor.disconnect();
-      source.disconnect();
-      stream.getTracks().forEach((track) => track.stop());
-      setRecording(false);
-
-      const combined = Float32Array.from(chunks.flat());
-      setAudioBuffer(combined);
-
-      const text = await runWhisper(combined);
-      setTranscript(text);
-    }, 5000); // record for 5 seconds
+  const handleSpeak = () => {
+    const text = "Hello! This is a test speech.";
+    workerRef.current?.postMessage(text);
   };
 
   return (
-    <main className="p-6">
-      <h1 className="text-xl font-bold mb-4">🎤 Whisper Voice Assistant</h1>
-      <button
-        onClick={handleRecord}
-        disabled={recording}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        {recording ? 'Recording...' : 'Start Recording'}
-      </button>
-
-      {transcript && (
-        <p className="mt-6 text-gray-800">
-          <strong>Transcript:</strong> {transcript}
-        </p>
-      )}
+    <main>
+      <h1>Offline TTS Test</h1>
+      <button onClick={handleSpeak}>Speak</button>
     </main>
   );
 }

@@ -1,7 +1,17 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,11 +27,19 @@
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/workers/whisper.worker.js", "public/workers/ttsWorker.js"],
-  "exclude": ["node_modules","whisper.cpp/build", "whisper.cpp/tests"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "public/workers/tts.worker.js",
+    "public/workers/whisper.worker.js",
+    ".next/types/**/*.ts"
+, "public/workers/ttsWorker.js"  ],
+  "exclude": [
+    "node_modules",
+    "whisper.cpp/build",
+    "whisper.cpp/tests"
+  ]
 }
